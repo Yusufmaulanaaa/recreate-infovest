@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {z} from "zod" ;
 import { InputPassword } from "../ui/InputPass";
 import Button from "../components/Button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 type FormLogin ={
     email:string;
     password:string;
@@ -15,15 +15,22 @@ const schema = z.object({
     password : z.string().min(8, "Password minimal 8 Karakter"),
 });
 
+
 export default function LoginForm() {
 
-    const {register, handleSubmit, formState:{errors}} = useForm<FormLogin>({
+    const navigate = useNavigate();
+
+    const { register, handleSubmit, reset, formState:{errors} } = useForm<FormLogin>({
         resolver : zodResolver(schema)
     });
+    // console.log(errors  )
 
-    const onSubmit = (data : FormLogin) => {
-        console.log(data);
-    }
+    const onSubmit = (data: FormLogin) => {
+        console.log("Regist Succes" ,data);
+        localStorage.setItem("isLogin", "true");
+        reset();
+        navigate("/");
+    };
     return (
         <div className="flex justify-center mt-10">
              <div className="w-120 max-w-7xl bg-white p-5 rounded-2xl shadow-xl">
