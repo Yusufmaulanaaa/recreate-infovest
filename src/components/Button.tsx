@@ -1,19 +1,36 @@
 interface ButtonProps {
   title: string;
-  variant?: "primary" | "outline";
-  type? : "button" | "submit";
+  type?: "submit" | "button" | "reset";
+  variant?: "primary" | "secondary";
+  className?: string; // Tambahkan ini agar tidak error 'type string'
+  disabled?: boolean;
+  onClick?: () => void;
 }
 
-const Button: React.FC<ButtonProps> = ({ title, variant = "primary" , type="button"}) => {
-  const baseStyle = "px-5 py-3 rounded-lg font-medium transition ";
-
-  const variants = {
-    primary: "bg-red-900 text-white hover:bg-red-800",
-    outline: "border border-red-900 text-red-900 hover:bg-red-100",
-  };
+const Button: React.FC<ButtonProps> = ({
+  title,
+  type = "button",
+  variant = "primary",
+  className = "", // Berikan default value string kosong
+  disabled,
+  onClick,
+}) => {
+  // Style dasar tombol
+  const baseStyle = "transition-all duration-200 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed";
+  
+  // Style berdasarkan variant
+  const variantStyle = variant === "primary" 
+    ? "bg-blue-600 text-white hover:bg-blue-700" 
+    : "bg-slate-200 text-slate-800 hover:bg-slate-300";
 
   return (
-    <button type={type} className={`${baseStyle} ${variants[variant]}`}>
+    <button
+      type={type}
+      disabled={disabled}
+      onClick={onClick}
+      // Gabungkan baseStyle, variantStyle, dan className dari luar
+      className={`${baseStyle} ${variantStyle} ${className}`}
+    >
       {title}
     </button>
   );

@@ -1,109 +1,146 @@
-// import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { InputText } from "../ui/InputText";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {z} from "zod" ;
-import { InputPassword } from "../ui/InputPass";
-import Button from "../components/Button";
-import { InputTextArea } from "../ui/InputTextArea";
-import { Link, useNavigate } from "react-router-dom";
-import { SelectInput } from "../ui/SelectInput";
+import * as z from "zod";
+import { useNavigate, Link } from "react-router-dom";
 
-type FormRegist ={
-    nama:string
-    email:string;
-    password:string;
-    password_confirm : string;
-    biodata_singkat : string;
-    pilih_event : string;
-};
-const schema = z.object({
-    nama: z.string().min(1, "Nama harus diisi"),
-    email: z.string().min(1, "Email harus diisi"),
-    password: z.string().min(8, "Password minimal 8 Karakter"),
-    password_confirm: z.string().min(8, "Password minimal 8 Karakter"),
-    biodata_singkat: z.string().min(10, "Minimal isi dengan 10 Karakter"),
-    pilih_event : z.string().min(1, "Minimal Pilih 1 event"),
-    }).refine((data) => data.password === data.password_confirm, {
-    message: "Password tidak sama",
-    path: ["password_confirm"],
+// Import UI Components
+import { InputText } from "../ui/InputText";
+import { InputPassword } from "../ui/InputPass";
+import { InputTextArea } from "../ui/InputTextArea";
+import { SelectInput } from "../ui/SelectInput";
+import Button from "../components/Button";
+
+// 1. Validasi Schema yang lebih ketat
+const registerSchema = z.object({
+  nama: z.string().min(1, "Nama lengkap wajib diisi"),
+  email: z.string().min(1, "Email wajib diisi").email("Format email tidak valid"),
+  biodata_singkat: z.string().min(10, "Berikan biodata minimal 10 karakter"),
+  pilih_event: z.string().min(1, "Silahkan pilih salah satu event"),
+  password: z.string().min(8, "Password minimal 8 karakter"),
+  password_confirm: z.string().min(8, "Konfirmasi password minimal 8 karakter"),
+}).refine((data) => data.password === data.password_confirm, {
+  message: "Konfirmasi password tidak cocok",
+  path: ["password_confirm"],
 });
 
+type FormRegist = z.infer<typeof registerSchema>;
+
 export default function RegisterForm() {
+  const navigate = useNavigate();
 
-    const navigate = useNavigate();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<FormRegist>({
+    resolver: zodResolver(registerSchema),
+    mode: "onTouched",
+  });
 
-    const { register, handleSubmit, reset, formState:{errors} } = useForm<FormRegist>({
-        resolver : zodResolver(schema)
-    });
-    // console.log(errors  )
+  const onProcessRegist = async (data: FormRegist) => {
+    try {
+      console.log("Mencoba mendaftar...", data);
+      // Simulasi proses
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+      
+      localStorage.setItem("isLogin", "true");
+      reset();
+      navigate("/");
+    } catch (err) {
+      console.error("Registrasi gagal", err);
+    }
+  };
 
-    const onSubmit = (data: FormRegist) => {
-        console.log("Regist Succes" ,data);
-        localStorage.setItem("isLogin", "true");
-        reset();
-        navigate("/");
-    };
+  return (
+    <div className="flex justify-center items-center min-h-screen bg-slate-50/30 py-10 px-4">
+      <div className="w-full max-w-xl bg-white p-8 md:p-10 rounded-[2.5rem] shadow-2xl shadow-slate-200 border border-slate-100">
+        
+        <header className="mb-8 text-center">
+          <h1 className="text-3xl font-black text-slate-800 tracking-tight">
+            Buat Akun
+          </h1>
+          <p className="text-slate-400 mt-2 text-sm">
+            Lengkapi data diri untuk mengikuti event seru kami
+          </p>
+        </header>
 
-    return (
-        <div className="flex justify-center mt-10">
-            <div className="w-120 max-w-7xl bg-white p-5 rounded-2xl shadow-xl">
-                
-                <h1 className="text-center text-2xl font-bold mb-5">
-                    Form Register
-                </h1>
+        <form onSubmit={handleSubmit(onProcessRegist)} className="space-y-1">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4">
+            <InputText 
+              label="Nama Lengkap" 
+              name="nama" 
+              placeholder="Contoh: Yusuf Maulana"
+              register={register} 
+              error={errors.nama?.message} 
+            />
+            <InputText 
+              label="Alamat Email" 
+              name="email" 
+              placeholder="nama@email.com"
+              register={register} 
+              error={errors.email?.message} 
+            />
+          </div>
 
-                <form onSubmit={handleSubmit(onSubmit)}>
-                    <InputText 
-                        label="Nama" 
-                        name="nama" 
-                        register={register} 
-                        error={errors.nama?.message} 
-                        />
-                    <InputText 
-                        label="Email" 
-                        name="email" 
-                        register={register} 
-                        error={errors.email?.message} 
-                        />
-                    <InputTextArea 
-                        label="Biodata Singkat" 
-                        name="biodata_singkat" 
-                        register={register} 
-                        errors={errors.biodata_singkat?.message} 
-                        />
-                    <SelectInput
-                        label = "Pilih Event"
-                        name = "pilih_event"
-                        register={register}
-                        errors = {errors.pilih_event?.message}
-                        options={[
-                            {label : " IT Competition", value:"IT Competition"},
-                            {label : "IT Seminar", value:"IT Seminar"},
-                            {label : "IT TalskShow", value: " IT TalkShow"},
-                            {label : " IT Workshop", value : "IT Workshop"}
-                        ]
-                        }
-                        />
-                    <InputPassword 
-                        label="Password" 
-                        name="password" 
-                        register={register} 
-                        error={errors.password?.message} 
-                        />
-                    <InputPassword 
-                        label="Password Confirm" 
-                        name="password_confirm" 
-                        register={register} 
-                        error={errors.password_confirm?.message} />
-                <div className=" h-20 flex flex-col justify-center items-center">
-                    <Button title="Register" variant="primary" type="submit"/>
-                       <div> 
-                         Atau sudah punya akun? <Link to="/login">Masuk disini</Link>
-                       </div> 
-                </div>
-                </form>
-            </div>
-        </div>
-    );
+          <InputTextArea 
+            label="Biodata Singkat" 
+            name="biodata_singkat" 
+            placeholder="Ceritakan sedikit tentang dirimu..."
+            register={register} 
+            error={errors.biodata_singkat?.message} // Diubah dari errors ke error
+          />
+
+          <SelectInput
+            label="Pilih Event"
+            name="pilih_event"
+            register={register}
+            error={errors.pilih_event?.message} // Diubah dari errors ke error
+            options={[
+              { label: "IT Competition", value: "IT Competition" },
+              { label: "IT Seminar", value: "IT Seminar" },
+              { label: "IT TalkShow", value: "IT TalkShow" },
+              { label: "IT Workshop", value: "IT Workshop" }
+            ]}
+          />
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4">
+            <InputPassword 
+              label="Password" 
+              name="password" 
+              placeholder="••••••••"
+              register={register} 
+              error={errors.password?.message} 
+            />
+            <InputPassword 
+              label="Konfirmasi Password" 
+              name="password_confirm" 
+              placeholder="••••••••"
+              register={register} 
+              error={errors.password_confirm?.message} 
+            />
+          </div>
+
+          <div className="pt-6">
+            <Button 
+              title={isSubmitting ? "Mendaftarkan..." : "Daftar Sekarang"} 
+              variant="primary" 
+              type="submit"
+              className="w-full py-4 rounded-2xl font-bold shadow-lg shadow-blue-100 transition-all active:scale-[0.98]"
+              disabled={isSubmitting}
+            />
+          </div>
+
+          <footer className="mt-8 text-center pt-6 border-t border-slate-50">
+            <p className="text-sm text-slate-500">
+              Sudah punya akun?{" "}
+              <Link to="/login" className="text-blue-600 font-bold hover:underline">
+                Masuk disini
+              </Link>
+            </p>
+          </footer>
+        </form>
+      </div>
+    </div>
+  );
 }

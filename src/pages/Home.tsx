@@ -1,175 +1,188 @@
-// import './App.css';
+import { useNavigate } from "react-router-dom";
 import Button from "../components/Button";
-import {Collapse} from '../ui/Collapse';
+import { Collapse } from '../ui/Collapse';
 import maskot from '../assets/maskot 2.png';
-import logo from '../assets/logo-full.png'
-// import Header from '../components/Navbar';
+import logo from '../assets/logo-full.png';
 import CardProduct from '../components/CardProduct';
-import wave from '../assets/wave-haikei (3).png'
-import wave_bot from '../assets/wave-haikei (4).png'
+import wave from '../assets/wave-haikei (3).png';
+import wave_bot from '../assets/wave-haikei (4).png';
 import SpeakerCard from '../ui/SpeakerCard';
-// import Section from './components/Section';
 import useInView from '../hooks/useInView';
 
+export default function Home() {
+  const navigate = useNavigate();
+  const [heroRef, heroShow] = useInView();
+  const [aboutRef, aboutShow] = useInView();
+  const [speakerRef, speakerShow] = useInView();
 
-function App() {
-   const [heroRef, heroShow] = useInView();
-   const [aboutRef, aboutShow] = useInView();
-   const [speakerRef, speakerShow] = useInView();
-  //  const [collapseRef, collapseShow] = useInView();
-   const speakers = [ 
-   { 
-     name: "Dery Agung Triyadi", 
-     role: "Aws Indonesia", 
-     imageUrl: 
-       "https://www.invofest-harkatnegeri.com/assets/seminar/Seminar%20Dery.png", 
-   }, 
-   { 
-     name: "Sowam Habibi", 
-     role: "Google Indonesia", 
-     imageUrl: 
-       "https://www.invofest-harkatnegeri.com/assets/seminar/seminar%20sowam.png", 
-   }, 
-   { 
-     name: "Lhuqita Fazry", 
-     role: "Mobile Development Developer, Founder Rumah Coding Indonesia", 
-     imageUrl: 
-       "https://www.invofest-harkatnegeri.com/assets/workshop/workshop%20mobile.png", 
-   }, 
- ]; 
-
- const collapseItems = [ 
-   { 
-     title: "Apa itu Invofest?", 
-     description: 
-       `Invofest (Informatics Vocational Festival) adalah festival tahunan yang 
-bertujuan untuk menginspirasi dan memberdayakan generasi muda Indonesia dalam menghadapi 
-era digital. Dengan mengusung tema "Beyond Limits, Beyond Intelligence: Innovate for a 
-Smarter Tomorrow ".",`
-  }, 
-   { 
-     title: "Kapan dan di mana Invofest akan diselenggarakan?", 
-     description: 
-       `Invofest akan diselenggarakan pada tanggal 15-17 November 2024 di Jakarta 
-Convention Center (JCC), Jakarta, Indonesia.",` 
-   }, 
-   { 
-     title: "Siapa saja yang dapat mengikuti Invofest?", 
-     description: 
-       `Invofest terbuka untuk semua kalangan, terutama mahasiswa, pelajar, profesional 
-muda, dan siapa saja yang tertarik dengan teknologi dan inovasi. Acara ini dirancang 
-untuk memberikan inspirasi dan pengetahuan kepada semua peserta, tanpa memandang latar 
-belakang atau tingkat keahlian.", `
-   }, 
- ]; 
+  const speakers = [
+    {
+      name: "Dery Agung Triyadi",
+      role: "AWS Indonesia",
+      imageUrl: "https://www.invofest-harkatnegeri.com/assets/seminar/Seminar%20Dery.png",
+    },
+    {
+      name: "Sowam Habibi",
+      role: "Google Indonesia",
+      imageUrl: "https://www.invofest-harkatnegeri.com/assets/seminar/seminar%20sowam.png",
+    },
+    {
+      name: "Lhuqita Fazry",
+      role: "Founder Rumah Coding Indonesia",
+      imageUrl: "https://www.invofest-harkatnegeri.com/assets/workshop/workshop%20mobile.png",
+    },
+  ];
 
   return (
-    <div>
-    <section 
-    ref={heroRef}
-  className="bg-white relative overflow-hidden z-0 pt-2"
->
-  <div className='container mx-auto'>
-    <div className="flex justify-between items-center gap-50">
+    <div className="bg-white overflow-x-hidden font-sans">
+      
+      {/* 1. HERO SECTION */}
+      <section ref={heroRef} className="relative min-h-screen flex items-center pt-10 pb-20 overflow-hidden">
+        {/* Glow Background */}
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-500/10 blur-[120px] rounded-full -mr-32 -mt-32"></div>
+        
+        <div className="container mx-auto px-6 z-10">
+          <div className="flex flex-col lg:flex-row justify-between items-center gap-12">
+            
+            <div className="flex flex-col gap-8 max-w-2xl text-left">
+              <div className={`reveal ${heroShow ? "show animate-left" : ""}`}>
+                <img src={logo} alt="Invofest Logo" className="w-60 md:w-72 drop-shadow-md" />
+              </div>
 
-     
-      <div className="flex flex-col gap-6 max-w-xl">
+              <h1 className={`text-4xl md:text-6xl font-black leading-tight reveal ${heroShow ? "show animate-left" : ""}`}>
+                <span className="bg-gradient-to-r from-red-900 to-blue-800 bg-clip-text text-transparent">Beyond Limits,</span> <br />
+                <span className="text-slate-800">Innovate Together</span>
+              </h1>
 
-        <div className="flex flex-col gap-4">
+              <p className={`text-lg md:text-xl text-slate-600 leading-relaxed reveal ${heroShow ? "show animate-left" : ""}`}>
+                Selamat datang di <span className="font-bold text-red-700">Invofest 2026</span>. Arena kolaborasi teknologi terbesar untuk melahirkan inovator muda. Ubah ide gilamu menjadi solusi nyata bersama ribuan talenta digital lainnya.
+              </p>
 
-       
-          <div className={`reveal ${heroShow ? "show animate-left" : ""}`}>
-            <img src={logo} alt="" className='w-60' />
+              <div className={`flex flex-wrap gap-4 reveal ${heroShow ? "show animate-up" : ""}`}>
+                <Button 
+                  title="Amankan Kursi Sekarang" 
+                  variant="primary" 
+                  onClick={() => navigate('/register')}
+                  className="px-10 py-4 rounded-2xl bg-gradient-to-r from-red-700 to-blue-700 hover:from-red-800 hover:to-blue-800 text-white shadow-xl shadow-blue-100 font-bold transition-transform hover:scale-105" 
+                />
+                <Button 
+                  title="Masuk Akun" 
+                  variant="secondary" 
+                  onClick={() => navigate('/login')}
+                  className="px-10 py-4 rounded-2xl border-2 border-slate-200 bg-white text-slate-700 font-bold hover:bg-slate-50 transition-all" 
+                />
+              </div>
+            </div>
+
+            <div className={`w-full lg:w-1/2 flex justify-center reveal ${heroShow ? "show animate-right" : ""}`}>
+              <div className="relative">
+                <div className="absolute inset-0 bg-blue-400/20 blur-3xl rounded-full scale-75 animate-pulse"></div>
+                <img src={maskot} alt="Mascot Invofest" className="relative w-full max-w-md drop-shadow-2xl animate-pulse-slow" />
+              </div>
+            </div>
           </div>
-
-     
-          <p className={`text-2xl w-3xl reveal ${heroShow ? "show animate-left" : ""}`}>
-            Invofest atau Informatics Vocational Festival adalah event tahunan dan event terbesar 
-            dari Himpunan Mahasiswa Teknik Informatika / HIMATIV Universitas Harkat Negeri.
-          </p>
-
         </div>
-        <div className={`flex gap-4 reveal ${heroShow ? "show animate-up" : ""}`}>
-          <Button title="Detail Selengkapnya" variant='primary' type="button" />
-          <Button title="Hubungi Panitia" variant='outline' type="button" />
-        </div>
+      </section>
 
-      </div>
+      <img src={wave} alt="Wave Decoration" className="w-full opacity-20 -mt-24 pointer-events-none" />
 
-      {/* KANAN */}
-      <div className={`w-1/2 flex justify-center reveal ${heroShow ? "show animate-right" : ""}`}>
-        <img src={maskot} alt="maskot" className="w-130 ml-20" />
-      </div>
-
-    </div>
-  </div>
-</section>
-    <div>
-      <img src={wave} alt="" className='w-full opacity-30 '/>
-    </div>
-    <section ref = {aboutRef} className=' bg-[#da648f]/30 '>
-          <div className='mx-auto ml-50'>
-            <h1 className='font-semibold text-5xl pt-20 text-[#852e4e] reveal ${aboutShow ? "show animate-left" : ""}' >Tentang Invofest</h1>
-            <p className='font-normal text-xl text-gray-700 mt-5 ml-5 mr-4 reveal ${aboutShow ? "show animate-left" : ""}'>Invofest 2026, adalah event yang diadakan setiap tahun oleh Himpunan Mahasiswa D4 Teknik Informatika (HIMATIV) 
-              di Universitas Harkat Negeri Kota Tegal. Acara ini bertujuan  untuk menginpirasi dan memberdayakan generasi muda di Indonesia dalam menghadapi era digital.
+      {/* 2. ABOUT SECTION */}
+      <section ref={aboutRef} className="bg-slate-50 py-24">
+        <div className="container mx-auto px-6">
+          <div className="max-w-3xl mb-16">
+            <h2 className={`text-4xl md:text-5xl font-black text-red-900 mb-6 reveal ${aboutShow ? "show animate-left" : ""}`}>
+              Why Invofest?
+            </h2>
+            <p className={`text-xl text-slate-700 leading-relaxed reveal ${aboutShow ? "show animate-left" : ""}`}>
+              Kami bukan sekadar festival teknologi biasa. Kami adalah titik temu antara <span className="text-blue-600 font-bold">Ambisi, Kreativitas, dan Teknologi</span> masa depan.
             </p>
           </div>
-          <div className="flex justify-center gap-6 mt-10 flex-wrap">
 
-          {[
-            {title:'IT Competition',desc:'Kompetisi “From Creation to Innovation” mengajak generasi muda untuk mengembangkan inovasi dan kreativitas guna membentuk kelompok yang memiliki potensi luar biasa, yang mampu mewujudkan masa depan yang berkelanjutan.'},
-            {title:'IT Workshop',desc:`Workshop 'AI for a Sustainable Future: The Role of Z Generation in the Digital Era' membekali Gen Z dengan keterampilan praktis AI untuk menciptakan solusi berkelanjutan.'`},
-            {title:'IT Seminar',desc:'Seminar nasional ini membahas “Human-AI Integration: Merancang Arsitektur Kolaboratif, Bukan Kompetitif” untuk mengembangkan potensi diri dan pengetahuan teknologi lebih dalam lagi.'},
-            {title:'IT Talkshow',desc:'Talkshow “Humanizing Technology: Kolaborasi Manusia dan AI di Masa Depan” membahas peran manusia dalam memanfaatkan AI untuk solusi berkelanjutan dan peningkatan teknologi.'},
-          ].map((item, i) => (
-
-           <div
-              key={i}
-              className={`reveal ${aboutShow ? "show animate-up" : "opacity-100"}`}
-              style={{ animationDelay: `${i * 0.2}s` }}
-            >
-      <CardProduct title={item.title} description={item.desc}>
-        <Button title='Detail Selengkapnya' variant='primary'type="button"/>
-      </CardProduct>
-    </div>
-
-  ))}
-
-</div>
-    </section>
-          <div>
-            <img src={wave_bot} alt="" className='w-full opacity-30'/>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              { title: 'IT Competition', desc: 'Buktikan kemampuanmu di panggung nasional.' },
+              { title: 'IT Workshop', desc: 'Kuasai skill praktis yang dicari industri.' },
+              { title: 'IT Seminar', desc: 'Serap ilmu langsung dari para tech-leader.' },
+              { title: 'IT Talkshow', desc: 'Bedah tuntas masa depan kolaborasi AI.' },
+            ].map((item, i) => (
+              <div 
+                key={i} 
+                className={`reveal ${aboutShow ? "show animate-up" : ""}`} 
+                style={{ animationDelay: `${i * 0.1}s` }}
+              >
+                <CardProduct title={item.title} description={item.desc}>
+                  <Button title="Jelajahi" variant="primary" className="w-full py-3 rounded-xl font-bold bg-blue-600 hover:bg-blue-700 text-white transition-colors" />
+                </CardProduct>
+              </div>
+            ))}
           </div>
-      <section ref={speakerRef} id="speaker" className="py-24">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-10 px-3"> 
-                {speakers.map((speaker, index) => ( 
-                   <div
-                      key={index}
-                      className={`reveal ${speakerShow ? "show animate-up" : ""}`}
-                      style={speakerShow ? { animationDelay: `${index * 0.2}s` } : {}}
-                    >
-                  <SpeakerCard 
-                    key={index} 
-                    name={speaker.name} 
-                    role={speaker.role} 
-                    imageUrl={speaker.imageUrl} 
-                  />
-                  </div> 
-                ))} 
-              </div> 
-       </section>
-       <section id="collapse" className="py-24 flex flex-col gap-2 px-3"> 
-              {collapseItems.map((item, index) => ( 
-              <Collapse 
-              key={index} 
-              title={item.title} 
-              description={item.description} 
-              /> 
-              ))} 
-        </section>
+        </div>
+      </section>
+
+      <img src={wave_bot} alt="Wave Bottom" className="w-full opacity-20 pointer-events-none" />
+
+      {/* 3. SPEAKERS SECTION */}
+      <section ref={speakerRef} className="py-24 bg-white relative overflow-hidden">
+        <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-50 rounded-full blur-3xl -ml-20 -mb-20"></div>
+        
+        <div className="container mx-auto px-6 relative z-10 text-center">
+          <h2 className="text-4xl font-black text-red-900 uppercase tracking-tight">The Visionaries</h2>
+          <p className="text-slate-500 mt-4 text-lg italic">Belajar dari mereka yang membangun <span className="text-blue-500 font-bold">masa depan.</span></p>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mt-16">
+            {speakers.map((speaker, index) => (
+              <div
+                key={index}
+                className={`reveal ${speakerShow ? "show animate-up" : ""}`}
+                style={{ animationDelay: `${index * 0.2}s` }}
+              >
+                <SpeakerCard
+                  name={speaker.name}
+                  role={speaker.role}
+                  imageUrl={speaker.imageUrl}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 4. FAQ SECTION - Clean & Professional */}
+      <section className="py-24 bg-slate-50">
+        <div className="container mx-auto px-6 max-w-4xl text-center">
+          <h2 className="text-3xl md:text-4xl font-black mb-12 bg-gradient-to-r from-red-900 to-blue-800 bg-clip-text text-transparent uppercase">
+            Sering Ditanyakan
+          </h2>
+          <div className="flex flex-col gap-4 text-left">
+            {[
+              { 
+                q: "Siapa yang bisa bergabung?", 
+                a: "Seluruh mahasiswa dan pelajar aktif di Indonesia yang punya semangat untuk berinovasi dan belajar teknologi terbaru!" 
+              },
+              { 
+                q: "Acara diselenggarakan online atau offline?", 
+                a: "Invofest 2026 hadir secara Hybrid. Seminar dan talkshow bisa diakses lewat streaming, sedangkan babak final kompetisi akan diadakan langsung di Tegal." 
+              },
+              { 
+                q: "Bagaimana cara pendaftarannya?", 
+                a: "Klik tombol 'Amankan Slotmu' di atas, buat akun, dan pilih kategori event yang ingin kamu ikuti. Gampang banget bray!" 
+              }
+            ].map((item, index) => (
+              <div key={index} className="group border border-slate-200 hover:border-blue-300 bg-white rounded-2xl overflow-hidden transition-all duration-300 shadow-sm hover:shadow-md hover:shadow-blue-50">
+                <Collapse 
+                  title={item.q} 
+                  description={item.a} 
+                />
+              </div>
+            ))}
+          </div>
+          
+          <p className="mt-12 text-slate-500">
+            Butuh bantuan lebih lanjut? <span className="text-blue-600 font-semibold cursor-pointer hover:underline">Chat admin kami</span>
+          </p>
+        </div>
+      </section>
 
     </div>
-  )
+  );
 }
-
-export default App;
